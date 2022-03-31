@@ -1,0 +1,13 @@
+.scoreboard{
+    display: flex;
+
+}
+
+.roundDisplay{
+    margin-left: 80px;
+    font-size: 25px;
+    color: red;
+}
+
+.computerScore{
+}

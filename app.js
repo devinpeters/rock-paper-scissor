@@ -2,12 +2,36 @@ let moves = ['rock', 'paper', 'scissor'];
 let roundWon = '';
 let playerScore = 0; 
 let computerScore = 0;
+const rockBtn = document.querySelector(".rock");
+const paperBtn = document.querySelector(".paper");
+const scissorsBtn = document.querySelector(".scissors");
+const displayPlayerScore = document.querySelector(".playerScore");
+const displayComputerScore = document.querySelector(".computerScore");
+const winner = document.querySelector(".winner");
+const roundDisplay = document.querySelector(".roundDisplay");
+const resetBtn = document.createElement("button");
+ resetBtn.innerHTML = 'reset game'
+
+ resetBtn.addEventListener("click", function(){
+    reset();
+ });
+
+rockBtn.addEventListener("click", function(){
+    playRound('rock');
+});
+paperBtn.addEventListener("click", function(){
+    playRound('paper');
+});
+scissorsBtn.addEventListener("click", function(){
+    playRound('scissor');
+});
 
 function computerPlay(){
     return moves[Math.floor(Math.random() * (2 + 1))];
 }
 
-function playRound(playerSelection, computerSelection){
+function playRound(playerSelection){
+    let computerSelection = computerPlay();
     if(playerSelection === computerSelection){
         roundWon = 'tie';
         
@@ -18,6 +42,8 @@ function playRound(playerSelection, computerSelection){
            {
                roundWon = 'player'
                playerScore ++;
+               displayPlayerScore.innerHTML = ` Player: ${playerScore}`;
+               isGameOver();
            }
     else if((computerSelection === 'rock' && playerSelection === 'scissor')||
             (computerSelection === 'paper' && playerSelection === 'rock')|| 
@@ -26,17 +52,23 @@ function playRound(playerSelection, computerSelection){
 
            roundWon = 'computer'
            computerScore++;
+           displayComputerScore.innerHTML = `Computer: ${computerScore}`;
+           isGameOver();
         }   
         updateMessage(roundWon, playerSelection, computerSelection);   
 }   
 
 function isGameOver(){
     if(playerScore === 3){
-        console.log(`The game is over!! The player has won with a score of ${playerScore}`);
-        return true;
+        winner.innerHTML = `YOU WIN! GAME OVER!!`
+        document.body.appendChild(resetBtn);
+        toggleButton(true);
+                return true;
     }
     else if(computerScore === 3){
-        console.log(`The game is over!! The Computer has won with a score of ${computerScore}`);
+        winner.innerHTML = `THE COMPUTER IS THE WINNER! GAME OVER!!`
+        document.body.appendChild(resetBtn);
+        toggleButton(true);
         return true;
     }
     else{
@@ -44,24 +76,32 @@ function isGameOver(){
     }
 }
 
-function game(){
-        while(!isGameOver()){
-            let playerSelection = prompt("Type rock, paper, or scissor to play a round");
-            let computerSelection = computerPlay();
-            playRound(playerSelection, computerSelection);
-        }
-    }
 
 function updateMessage(winner, playerSelection, computerSelection){
     if(winner === 'player'){
-        console.log(`The ${winner} has won this round! ${playerSelection} beats ${computerSelection}!!`);
+        roundDisplay.innerHTML = `The ${winner} has won this round! ${playerSelection} beats ${computerSelection}!!`
     }
     else if(winner === 'computer'){
-        console.log(`The ${winner} has won this round! ${computerSelection} beats ${playerSelection}!!`);
+        roundDisplay.innerHTML = `The ${winner} has won this round! ${computerSelection} beats ${playerSelection}!!`
     }
     else if(winner === 'tie'){
-        console.log(`The round is a tie!! You both chose ${playerSelection}`);
+        roundDisplay.innerHTML = `The round is a tie!! You both chose ${playerSelection}`
     }
 }
 
-game();
+function toggleButton(logic){
+    rockBtn.disabled = logic;
+    paperBtn.disabled = logic;
+    scissorsBtn.disabled = logic;
+}
+
+function reset(){
+    playerScore = 0;
+    computerScore = 0;
+    displayPlayerScore.innerHTML = ` Player: 0`;
+    displayComputerScore.innerHTML = `Computer: 0`;
+    roundDisplay.innerHTML = '';
+    winner.innerHTML = '';
+    resetBtn.remove();
+    toggleButton(false);
+}
